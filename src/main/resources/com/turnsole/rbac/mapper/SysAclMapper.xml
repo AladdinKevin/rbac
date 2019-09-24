@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.turnsole.rbac.mapper.SysAclMapper">
+    <resultMap id="BaseResultMap" type="com.turnsole.rbac.domain.model.SysAcl">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="aclModule_id" jdbcType="INTEGER" property="aclmoduleId"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="type" jdbcType="TINYINT" property="type"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="seq" jdbcType="INTEGER" property="seq"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="operator" jdbcType="VARCHAR" property="operator"/>
+        <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime"/>
+        <result column="operate_ip" jdbcType="VARCHAR" property="operateIp"/>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from `sys_acl`
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.turnsole.rbac.domain.model.SysAcl"
+            useGeneratedKeys="true">
+    insert into `sys_acl` (code, name, aclModule_id, 
+      url, type, status, 
+      seq, remark, operator, 
+      operate_time, operate_ip)
+    values (#{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{aclmoduleId,jdbcType=INTEGER}, 
+      #{url,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
+      #{seq,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, 
+      #{operateTime,jdbcType=TIMESTAMP}, #{operateIp,jdbcType=VARCHAR})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.turnsole.rbac.domain.model.SysAcl">
+    update `sys_acl`
+    set code = #{code,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      aclModule_id = #{aclmoduleId,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      type = #{type,jdbcType=TINYINT},
+      status = #{status,jdbcType=TINYINT},
+      seq = #{seq,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      operate_ip = #{operateIp,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, code, name, aclModule_id, url, type, status, seq, remark, operator, operate_time, 
+    operate_ip
+    from `sys_acl`
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+    <select id="getAll" resultMap="BaseResultMap">
+     select id, code, name, aclModule_id, url, type, status, seq, remark, operator, operate_time,
+     operate_ip
+     from `sys_acl`
+    </select>
+
+    <select id="countByAclModuleId" parameterType="map" resultType="int">
+        SELECT COUNT(1)
+        FROM `sys_acl`
+        WHERE 1 = 1
+        <if test="aclModuleId != null">
+            AND aclModule_id = #{aclModuleId}
+        </if>
+    </select>
+
+    <select id="countByNameAndAclModuleId" parameterType="map" resultType="int">
+        SELECT COUNT(1)
+        FROM `sys_acl`
+        WHERE 1 = 1
+        <if test="aclModuleId != null">
+            AND aclModule_id = #{aclModuleId}
+        </if>
+        <if test="name != null and name != ''">
+            AND name = #{name}
+        </if>
+        <if test="id != null">
+            AND id != #{id}
+        </if>
+    </select>
+
+    <select id="getPageByAclModuleId" parameterType="map" resultMap="BaseResultMap">
+        select id, code, name, aclModule_id, url, type, status, seq, remark, operator, operate_time,
+        operate_ip
+        from `sys_acl`
+        WHERE aclModule_id = #{aclModuleId}
+        ORDER BY seq ASC, name ASC
+        LIMIT #{page.offset}, #{page.pageSize}
+    </select>
+
+    <select id="getByIdList" parameterType="map" resultMap="BaseResultMap">
+     select id, code, name, aclModule_id, url, type, status, seq, remark, operator, operate_time,
+     operate_ip
+     from `sys_acl`
+     where id IN
+     <foreach collection="idList" item="id" open="(" close=")" separator=",">
+         #{id}
+     </foreach>
+    </select>
+
+    <select id="getByUrl" parameterType="string" resultMap="BaseResultMap">
+      SELECT id, code, name, aclModule_id, url, type, status, seq, remark, operator, operate_time,
+      operate_ip
+      from `sys_acl`
+      WHERE
+      url = #{url}<!-- url is not null and url != '' and #{url} REGEXP url -->
+    </select>
+
+</mapper>

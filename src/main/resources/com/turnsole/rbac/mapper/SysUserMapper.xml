@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.turnsole.rbac.mapper.SysUserMapper">
+  <resultMap id="BaseResultMap" type="com.turnsole.rbac.domain.model.SysUser">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+    <result column="mail" jdbcType="VARCHAR" property="mail" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="dept_id" jdbcType="INTEGER" property="deptId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime" />
+    <result column="operate_ip" jdbcType="VARCHAR" property="operateIp" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from `sys_user`
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.turnsole.rbac.domain.model.SysUser" useGeneratedKeys="true">
+    insert into `sys_user` (username, telephone, mail, 
+      password, remark, dept_id, 
+      status, operator, operate_time, 
+      operate_ip)
+    values (#{username,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, #{mail,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{deptId,jdbcType=INTEGER}, 
+      #{status,jdbcType=TINYINT}, #{operator,jdbcType=VARCHAR}, #{operateTime,jdbcType=TIMESTAMP}, 
+      #{operateIp,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.turnsole.rbac.domain.model.SysUser">
+    update `sys_user`
+    set username = #{username,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      mail = #{mail,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      dept_id = #{deptId,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT},
+      operator = #{operator,jdbcType=VARCHAR},
+      operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      operate_ip = #{operateIp,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, username, telephone, mail, password, remark, dept_id, status, operator, 
+    operate_time, operate_ip
+    from `sys_user`
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, username, telephone, mail, password, remark, dept_id, status, operator, 
+    operate_time, operate_ip
+    from `sys_user`
+  </select>
+
+  <select id="findByKeyword" parameterType="string" resultMap="BaseResultMap">
+    SELECT id, username, telephone, mail, password, remark, dept_id, status, operator,
+    operate_time, operate_ip
+    FROM sys_user
+    WHERE telephone = #{keyword}
+    OR mail = #{keyword}
+  </select>
+
+  <select id="countByMail" parameterType="map" resultType="int">
+    SELECT COUNT(1)
+    FROM sys_user
+    WHERE mail = #{mail}
+    <if test="id != null">
+      AND id != #{id}
+    </if>
+  </select>
+
+  <select id="countByTelephone" parameterType="map" resultType="int">
+    SELECT COUNT(1)
+    FROM sys_user
+    WHERE telephone = #{telephone}
+    <if test="id != null">
+      AND id != #{id}
+    </if>
+  </select>
+
+  <select id="countByDeptId" parameterType="int" resultType="int">
+    SELECT COUNT(1)
+    FROM sys_user
+    WHERE dept_id = #{deptId}
+  </select>
+  <select id="getPageByDeptId" parameterType="map" resultMap="BaseResultMap">
+    SELECT id, username, telephone, mail, password, remark, dept_id, status, operator,
+    operate_time, operate_ip
+    FROM sys_user
+    WHERE dept_id = #{deptId}
+    ORDER BY username ASC
+    LIMIT #{page.offset}, #{page.pageSize}
+  </select>
+
+  <select id="getByIdList" parameterType="map" resultMap="BaseResultMap">
+    SELECT id, username, telephone, mail, password, remark, dept_id, status, operator,
+    operate_time, operate_ip
+    FROM sys_user
+    WHERE id IN
+    <foreach collection="idList" item="id" open="(" close=")" separator=",">
+      #{id}
+    </foreach>
+  </select>
+
+</mapper>

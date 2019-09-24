@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.turnsole.rbac.mapper.SysLogMapper">
+  <resultMap id="BaseResultMap" type="com.turnsole.rbac.domain.model.SysLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="type" jdbcType="TINYINT" property="type" />
+    <result column="target_id" jdbcType="INTEGER" property="targetId" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime" />
+    <result column="operate_ip" jdbcType="VARCHAR" property="operateIp" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBS" type="com.turnsole.rbac.domain.model.SysLogWithBLOBs" extends="BaseResultMap">
+    <result column="old_value" jdbcType="LONGVARCHAR" property="oldValue" />
+    <result column="new_value" jdbcType="LONGVARCHAR" property="newValue" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from `sys_log`
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.turnsole.rbac.domain.model.SysLog" useGeneratedKeys="true">
+    insert into `sys_log` (type, target_id, operator, 
+      operate_time, operate_ip, old_value, 
+      new_value)
+    values (#{type,jdbcType=TINYINT}, #{targetId,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR}, 
+      #{operateTime,jdbcType=TIMESTAMP}, #{operateIp,jdbcType=VARCHAR}, #{oldValue,jdbcType=LONGVARCHAR}, 
+      #{newValue,jdbcType=LONGVARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.turnsole.rbac.domain.model.SysLog">
+    update `sys_log`
+    set type = #{type,jdbcType=TINYINT},
+      target_id = #{targetId,jdbcType=INTEGER},
+      operator = #{operator,jdbcType=VARCHAR},
+      operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      operate_ip = #{operateIp,jdbcType=VARCHAR},
+      old_value = #{oldValue,jdbcType=LONGVARCHAR},
+      new_value = #{newValue,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBS">
+    select id, type, target_id, operator, operate_time, operate_ip, old_value, new_value
+    from `sys_log`
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, type, target_id, operator, operate_time, operate_ip, old_value, new_value
+    from `sys_log`
+  </select>
+
+  <select id="countBySerchDto" parameterType="map" resultType="int">
+    SELECT COUNT(1)
+    FROM sys_log
+    <include refid="queryConditions" />
+  </select>
+
+  <select id="getPageListBySearchDto" parameterType="map" resultMap="ResultMapWithBLOBS">
+    select id, type, target_id, operator, operate_time, operate_ip, old_value, new_value
+    from `sys_log`
+    <include refid="queryConditions" />
+    ORDER BY operate_time desc
+    limit #{page.offset},#{page.pageSize}
+  </select>
+
+  <sql id="queryConditions">
+    <where>
+      <if test="dto.type != null">
+        AND type = #{dto.type}
+      </if>
+      <if test="dto.beforeSeq != null and dto.beforeSeq !=''">
+        AND old_value LIKE #{dto.beforeSeq}
+      </if>
+      <if test="dto.afterSeq != null and dto.afterSeq !=''">
+        AND new_value LIKE #{dto.afterSeq}
+      </if>
+      <if test="dto.operator != null and dto.operator !=''">
+        AND operator LIKE #{dto.operator}
+      </if>
+      <if test="dto.fromTime != null">
+        AND operate_time &gt;= #{dto.fromTime}
+      </if>
+      <if test="dto.toTime != null">
+        AND operate_time &lt;= #{dto.toTime}
+      </if>
+    </where>
+  </sql>
+</mapper>

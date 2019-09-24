@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!--css公共引用-->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="common_header(title,links)">
+    <title th:replace="${title}">The awesome application</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible">
+    <meta name="renderer" content="webkit" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="overview &amp; stats"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/static/ico" type="image/x-icon" />
+    <!-- bootstrap & fontawesome -->
+    <!--text fonts-->
+    <link rel="stylesheet" th:href="@{/assets/css/google-fonts.css}">
+    <!--ace style-->
+    <link rel="stylesheet" th:href="@{/assets/css/ace.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/ace-skins.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/ace-rtl.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/jquery.gritter.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/chosen.css}">
+
+    <th:block th:replace="${links}" />
+</head>
+</html>

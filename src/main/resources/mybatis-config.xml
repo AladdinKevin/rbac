@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <!-- Globally enables or disables any caches configured in any mapper under this configuration -->
+        <setting name="cacheEnabled" value="true"/>
+        <!-- Sets the number of seconds the driver will wait for a response from the database -->
+        <setting name="defaultStatementTimeout" value="3000"/>
+        <!-- Enables automatic mapping from classic database column names A_COLUMN to camel case classic Java property names aColumn -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!-- Allows JDBC support for generated keys. A compatible driver is required.
+        This setting     forces generated keys to be used if set to true,
+         as some drivers deny compatibility but still work -->
+        <setting name="useGeneratedKeys" value="true"/>
+        <!-- 配置控制台输出 -->
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+        <!--插入语句的时候会自动生成主键-->
+        <setting name="useGeneratedKeys" value="true"/>
+    </settings>
+
+    <!--别名标签-->
+   <!-- <typeAliases>
+        &lt;!&ndash;一经定义,我们就可以在mybatis的xml里面 所有
+        com.turnsole.rbac.mapper.roleMapper 都可以用 roleMapper来替代,roleMapper就是它的别名&ndash;&gt;
+        <typeAlias type="com.turnsole.rbac.mapper.roleMapper" alias="roleMapper" />
+    </typeAliases>-->
+
+    <!--SQL的拦截器标签,监听监控SQL-->
+    <!--<plugins>
+        <plugin interceptor=""></plugin>
+    </plugins>-->
+
+  <!--  <typeHandlers>
+
+    </typeHandlers>-->
+</configuration>
